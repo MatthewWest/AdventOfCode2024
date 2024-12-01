@@ -1,6 +1,9 @@
 package main
 
 import (
+	"io"
+	"log"
+	"os"
 	"testing"
 )
 
@@ -64,4 +67,32 @@ func Test_part2(t *testing.T) {
 			}
 		})
 	}
+}
+
+func BenchmarkPart1(b *testing.B) {
+	f, err := os.Open("../data/day01.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	bytes, err := io.ReadAll(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s := string(bytes)
+	b.ResetTimer()
+	part1(s)
+}
+
+func BenchmarkPart2(b *testing.B) {
+	f, err := os.Open("../data/day01.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	bytes, err := io.ReadAll(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s := string(bytes)
+	b.ResetTimer()
+	part2(s)
 }
