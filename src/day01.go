@@ -1,19 +1,25 @@
-package day01
+package main
 
 import (
-	"file"
+	"fmt"
 	"io"
 	"log"
+	"os"
 )
 
-func parsein(s string) {
-	return 
+func parsein(s string) string {
+	return s
 }
 
 func main() {
-	file, err := os.Open("data/day01.txt")
+	f, err := os.Open("data/day01.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	b, err := io.ReadAll(file)
+	b, err := io.ReadAll(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	input := parsein(string(b))
+	fmt.Printf("%s", input)
 }
