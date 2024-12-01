@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func parsein(s string) string {
+func parse(s string) string {
 	return s
 }
 
@@ -20,6 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	input := parsein(string(b))
+	input := parse(string(b))
 	fmt.Printf("%s", input)
 }
