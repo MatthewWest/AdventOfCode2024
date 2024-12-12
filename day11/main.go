@@ -56,6 +56,7 @@ func part1(input string) string {
 func part2(input string) string {
 	stones := parse(input)
 	stonecounts := make(map[string]int)
+	successorstable := make(map[string][]string)
 	for _, stone := range stones {
 		if stonecounts[stone] > 0 {
 			stonecounts[stone]++
@@ -66,7 +67,11 @@ func part2(input string) string {
 	for i := 0; i < 75; i++ {
 		nextcounts := make(map[string]int)
 		for stone, count := range stonecounts {
-			successors := step(stone)
+			var successors []string = successorstable[stone]
+			if successorstable[stone] == nil {
+				successors = step(stone)
+				successorstable[stone] = successors
+			}
 			for _, successor := range successors {
 				if nextcounts[successor] > 0 {
 					nextcounts[successor] += count
