@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"log"
@@ -66,13 +65,7 @@ func step(robot Robot, maxx int, maxy int) Robot {
 	return Robot{nextx, nexty, vx, vy}
 }
 
-func part1(input string, maxx int, maxy int) string {
-	robots := parse(input)
-	for i := 0; i < 100; i++ {
-		for j, robot := range robots {
-			robots[j] = step(robot, maxx, maxy)
-		}
-	}
+func safetyfactor(robots []Robot, maxx int, maxy int) int {
 	NW, NE, SW, SE := 0, 0, 0, 0
 	midx, midy := maxx/2, maxy/2
 	for _, robot := range robots {
@@ -88,7 +81,17 @@ func part1(input string, maxx int, maxy int) string {
 			// These robots are exactly on a midline, so they are not counted.
 		}
 	}
-	return fmt.Sprint(NW * NE * SW * SE)
+	return NW * NE * SW * SE
+}
+
+func part1(input string, maxx int, maxy int) string {
+	robots := parse(input)
+	for i := 0; i < 100; i++ {
+		for j, robot := range robots {
+			robots[j] = step(robot, maxx, maxy)
+		}
+	}
+	return fmt.Sprint(safetyfactor(robots, maxx, maxy))
 }
 
 func printrobots(robots []Robot, maxx int, maxy int) {
@@ -120,24 +123,18 @@ func totaldist(robots []Robot) float64 {
 
 func part2(input string, maxx int, maxy int) string {
 	robots := parse(input)
-	mindist := math.Inf(1)
-	scanner := bufio.NewScanner(os.Stdin)
-	for t := 0; ; t++ {
-		dist := totaldist(robots)
-		if dist < mindist {
-			printrobots(robots, maxx, maxy)
-			mindist = dist
-			fmt.Print("Has the easter egg been reached? (Y/N)")
-			scanner.Scan()
-			ans := scanner.Text()
-			if ans == "Y" {
-				return fmt.Sprint(t)
-			}
+	minsafety, minT := math.MaxInt, 0
+	for t := 0; t < 50000; t++ {
+		safety := safetyfactor(robots, maxx, maxy)
+		if safety < minsafety {
+			minsafety = safety
+			minT = t
 		}
 		for j, robot := range robots {
 			robots[j] = step(robot, maxx, maxy)
 		}
 	}
+	return fmt.Sprint(minT)
 }
 
 func main() {
